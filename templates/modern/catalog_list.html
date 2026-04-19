@@ -1,0 +1,103 @@
+{% extends 'modern/base.html' %}
+{% block title %}{{ category_name }} | AGWAXER{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-head section-head-catalog">
+            <div>
+                <div class="eyebrow">Catalog</div>
+                <h2>{{ category_name }}</h2>
+                <p class="muted">Explore supplements by category and find the right fit for your goals.</p>
+            </div>
+            <form method="get" class="search-row catalog-search" style="max-width:420px; width:100%;" autocomplete="off">
+                {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+                <div class="search-autocomplete" data-suggestions-url="{% url 'shop_search_suggestions' %}">
+                    <input type="text" name="q" value="{{ search_term }}" placeholder="Search products by name" data-search-input>
+                    <div class="suggestions-panel" data-suggestions-panel hidden></div>
+                </div>
+                <button class="btn" type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="category-strip">
+            <a class="btn {% if not selected_category %}btn-primary{% endif %}" href="{% url 'shop' %}">All Products</a>
+            {% for category in shop_categories %}
+                <a class="btn {% if selected_category == category.key %}btn-primary{% endif %}" href="{% url 'shop' %}?category={{ category.key }}">{{ category.label }}</a>
+            {% endfor %}
+        </div>
+
+        <div class="grid grid-3 catalog-grid">
+            {% for product in products %}
+                <article class="product-card">
+                    <a href="{% url detail_route_name product.pk %}">{% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="image-placeholder">{{ product.name }}</div>{% endif %}</a>
+                    <div>
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-copy">{{ product.short_description|truncatechars:95 }}</p>
+                        <div class="price">EGP {{ product.price }}</div>
+                    </div>
+                    <div class="meta"><span>{{ product.category_label|default:category_name }}</span><span>Fast local delivery</span></div>
+                    <div class="actions">
+                        <a class="btn" href="{% url detail_route_name product.pk %}">View details</a>
+                        <form method="post" action="{% url 'add_to_cart' catalog_key product.pk %}" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'shoppingcart' %}">
+                            <button class="btn btn-primary" type="submit">Add to cart</button>
+                        </form>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="panel"><p class="muted" style="margin:0;">No products matched your search.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<script>
+(() => {
+  const wrapper = document.querySelector('[data-suggestions-url]');
+  if (!wrapper) return;
+  const input = wrapper.querySelector('[data-search-input]');
+  const panel = wrapper.querySelector('[data-suggestions-panel]');
+  const hiddenCategory = wrapper.closest('form').querySelector('input[name="category"]');
+  let timer;
+
+  const hidePanel = () => {
+    panel.hidden = true;
+    panel.innerHTML = '';
+  };
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    clearTimeout(timer);
+    if (q.length < 2) {
+      hidePanel();
+      return;
+    }
+    timer = setTimeout(async () => {
+      const params = new URLSearchParams({ q });
+      if (hiddenCategory && hiddenCategory.value) params.set('category', hiddenCategory.value);
+      const response = await fetch(`${wrapper.dataset.suggestionsUrl}?${params.toString()}`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const data = await response.json();
+      if (!data.results.length) {
+        hidePanel();
+        return;
+      }
+      panel.innerHTML = data.results.map(item => `
+        <a class="suggestion-item" href="${item.url}">
+          <span>
+            <strong>${item.name}</strong>
+            <small>${item.category}</small>
+          </span>
+          <span>EGP ${item.price}</span>
+        </a>
+      `).join('');
+      panel.hidden = false;
+    }, 180);
+  });
+
+  input.addEventListener('blur', () => setTimeout(hidePanel, 120));
+  input.addEventListener('focus', () => {
+    if (panel.innerHTML.trim()) panel.hidden = false;
+  });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'modern/base.html' %}
+{% block title %}My Profile | AGWAXER{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container grid grid-2 profile-grid">
+        <div class="panel">
+            <div class="eyebrow">My account</div>
+            <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+            <div class="profile-meta">
+                <div><span class="muted">Username</span><strong>{{ request.user.username }}</strong></div>
+                <div><span class="muted">Email</span><strong>{{ request.user.email|default:'Not added yet' }}</strong></div>
+            </div>
+            <div class="actions">
+                <a class="btn" href="{% url 'shop' %}">Continue shopping</a>
+                <a class="btn" href="{% url 'shoppingcart' %}">Open cart</a>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="eyebrow">Orders</div>
+            <h2>Recent orders</h2>
+            {% if orders %}
+                <div class="order-list">
+                    {% for order in orders %}
+                        <article class="order-card">
+                            <div class="order-head">
+                                <strong>Order #{{ order.pk }}</strong>
+                                <span class="badge">{{ order.status|title }}</span>
+                            </div>
+                            <p class="muted order-date">{{ order.created_at|date:"M d, Y - H:i" }}</p>
+                            <div class="order-items">
+                                {% for item in order.items.all %}<div class="order-line"><span>{{ item.product_name }} × {{ item.quantity }}</span><strong>EGP {{ item.line_total }}</strong></div>{% endfor %}
+                            </div>
+                            <div class="order-total"><span class="muted">Total</span><strong>EGP {{ order.total }}</strong></div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted" style="margin:0;">You have not placed an order yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

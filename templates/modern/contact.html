@@ -1,0 +1,58 @@
+{% extends 'modern/base.html' %}
+{% block title %}Contact | AGWAXER Store{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Contact</div>
+                <h2>Need help choosing the right supplement stack?</h2>
+                <p class="muted">Send a message about product questions, order support, or general store inquiries. Your submission is stored in the dashboard so the team can review it later.</p>
+            </div>
+        </div>
+        <div class="grid grid-2">
+            <article class="panel contact-panel-info">
+                <div class="contact-feature">
+                    <span>📍</span>
+                    <div>
+                        <strong>Lebanon Square, Giza</strong>
+                        <p>Visit the store or connect online for supplement support and order questions.</p>
+                    </div>
+                </div>
+                <div class="contact-feature">
+                    <span>📞</span>
+                    <div>
+                        <strong>+02 115 556 8144</strong>
+                        <p>Saturday to Thursday, 8 AM to 8 PM.</p>
+                    </div>
+                </div>
+                <div class="contact-feature">
+                    <span>✉️</span>
+                    <div>
+                        <strong>Agwaxer00@gmail.com</strong>
+                        <p>Perfect for product availability, order questions, or support requests.</p>
+                    </div>
+                </div>
+            </article>
+            <article class="panel">
+                <form method="post" class="checkout-form contact-form-card">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <label for="name">Full name</label>
+                        <input id="name" name="name" type="text" value="{{ request.POST.name|default:'' }}" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" value="{{ request.POST.email|default:'' }}" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required>{{ request.POST.message|default:'' }}</textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Send message</button>
+                </form>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

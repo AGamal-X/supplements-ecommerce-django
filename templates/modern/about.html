@@ -1,0 +1,38 @@
+{% extends 'modern/base.html' %}
+{% block title %}About | AGWAXER Store{% endblock %}
+{% block content %}
+<section class="hero about-hero">
+    <div class="container hero-grid">
+        <div class="hero-card">
+            <div class="eyebrow">About AGWAXER Store</div>
+            <h1>A supplements storefront shaped around real fitness goals.</h1>
+            <p class="muted">AGWAXER Store presents performance products, recovery support, greens, functional snacks, and weight management essentials in a format that feels clear, premium, and conversion-focused.</p>
+            <div class="actions">
+                <a class="btn btn-primary" href="{% url 'shop' %}">Browse the catalog</a>
+                <a class="btn" href="{% url 'contact' %}">Talk to the store</a>
+            </div>
+        </div>
+        <div class="panel metrics-panel">
+            <div class="eyebrow">Store promise</div>
+            <div class="metric-row"><strong>Focused catalog</strong><span>Supplements grouped by goal, not clutter.</span></div>
+            <div class="metric-row"><strong>Sharper buying flow</strong><span>Fewer distractions from product page to checkout.</span></div>
+            <div class="metric-row"><strong>Useful product copy</strong><span>Descriptions written to support quick decisions.</span></div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container grid grid-2">
+        <article class="panel">
+            <div class="eyebrow">What the store covers</div>
+            <h3>Performance, wellness, and better everyday nutrition.</h3>
+            <p class="muted">Customers can move through categories like creatine and amino support, greens for daily wellness, bulking and muscle support, practical protein snacks, and L-Carnitine products for weight management routines.</p>
+        </article>
+        <article class="panel">
+            <div class="eyebrow">Visit or reach out</div>
+            <h3>Giza, Egypt</h3>
+            <p class="muted">Lebanon Square, Giza, Egypt<br>Phone: +02 115 556 8144<br>Email: Agwaxer00@gmail.com</p>
+            <span class="footer-pill">Built for shoppers who want clarity, speed, and cleaner supplement discovery.</span>
+        </article>
+    </div>
+</section>
+{% endblock %}

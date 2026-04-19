@@ -1,0 +1,122 @@
+{% extends 'modern/base.html' %}
+{% block title %}Home | AGWAXER{% endblock %}
+{% block content %}
+<section class="hero hero-home">
+    <div class="container hero-grid hero-home-grid">
+        <div class="hero-card hero-card-home">
+            <div class="eyebrow">Fuel your goals</div>
+            <h1>Supplements built around performance, recovery, and better daily habits.</h1>
+            <p class="muted hero-copy">Discover creatine, amino support, greens, protein snacks, and weight management essentials through one premium storefront designed to keep shopping clear, fast, and confidence-driven.</p>
+            <div class="hero-badges">
+                <span class="badge badge-soft">Performance support</span>
+                <span class="badge badge-soft">Daily wellness</span>
+                <span class="badge badge-soft">Fast local delivery</span>
+            </div>
+            <div class="actions">
+                <a class="btn btn-primary" href="{% url 'shop' %}">Shop supplements</a>
+                <a class="btn" href="{% url 'shop' %}?category=greens">Explore greens</a>
+            </div>
+        </div>
+        <div class="hero-visual panel">
+            <div class="glow glow-one"></div>
+            <div class="glow glow-two"></div>
+            <div class="visual-card card-primary floating-card">
+                <span class="visual-label">Top focus</span>
+                <strong>Recovery that keeps pace with training.</strong>
+                <p>Support intense workout routines with amino acids, creatine, glutamine, and fish oil essentials.</p>
+            </div>
+            <div class="visual-card card-secondary floating-card delay-card">
+                <span class="visual-label">Smart picks</span>
+                <strong>Better snack choices for busy days.</strong>
+                <p>Protein bars, peanut butter, and greens that fit your routine without adding friction.</p>
+            </div>
+            <div class="hero-ring"></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <div class="eyebrow">Shop by goal</div>
+                <h2>Shop by goal, routine, and the support your customers actually want.</h2>
+                <p class="muted">Each category is presented like a focused shelf: clear, visual, and built around how supplement shoppers browse in real life.</p>
+            </div>
+        </div>
+        <div class="category-showcase category-slider">
+            <a class="category-card" href="{% url 'shop' %}?category=performance">
+                <span class="category-icon">⚡</span>
+                <h3>Performance essentials</h3>
+                <p>Creatine and amino support for strength, energy, and workout consistency.</p>
+            </a>
+            <a class="category-card" href="{% url 'shop' %}?category=greens">
+                <span class="category-icon">🌿</span>
+                <h3>Green superfood</h3>
+                <p>Daily greens and wellness support for customers who want a more balanced routine.</p>
+            </a>
+            <a class="category-card" href="{% url 'shop' %}?category=muscle">
+                <span class="category-icon">🏋️</span>
+                <h3>Muscle support</h3>
+                <p>EAA, glutamine, fish oil, and bulking support for serious training phases.</p>
+            </a>
+            <a class="category-card" href="{% url 'shop' %}?category=peanut-butter">
+                <span class="category-icon">🥜</span>
+                <h3>Peanut butter</h3>
+                <p>Convenient add-ons for breakfast, snack prep, and extra calories when you need them.</p>
+            </a>
+            <a class="category-card" href="{% url 'shop' %}?category=protein-bars">
+                <span class="category-icon">🍫</span>
+                <h3>Protein bars</h3>
+                <p>Portable, easy snack choices built for fast energy and practical nutrition on the move.</p>
+            </a>
+            <a class="category-card" href="{% url 'shop' %}?category=weight-loss">
+                <span class="category-icon">🔥</span>
+                <h3>Weight management</h3>
+                <p>L-Carnitine support for customers focused on lighter routines and leaner goals.</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="section section-highlight">
+    <div class="container highlight-strip">
+        <div>
+            <div class="eyebrow">Why customers come back</div>
+            <h2>Clean product discovery, direct product pages, and a checkout flow that stays focused on buying.</h2>
+        </div>
+        <div class="highlight-points">
+            <div class="highlight-point"><strong>Clear product details</strong><span>Short, useful descriptions with key benefits that support confident buying.</span></div>
+            <div class="highlight-point"><strong>Fast cart flow</strong><span>Add products and move straight into cart and checkout without distractions.</span></div>
+            <div class="highlight-point"><strong>Account-ready</strong><span>Sign up, review orders, and keep your purchase flow connected to your account.</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head"><div><div class="eyebrow">Featured products</div><h2>Popular picks from the storefront.</h2><p class="muted">A smooth horizontal showcase of products customers notice first when they land on the store.</p></div><a class="btn" href="{% url 'shop' %}">View full catalog</a></div>
+        <div class="catalog-carousel">
+            {% for product in products %}
+                <article class="product-card">
+                    <a href="{% url detail_route_name product.pk %}">{% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<div class="image-placeholder">{{ product.name }}</div>{% endif %}</a>
+                    <div>
+                        <h3 class="product-title">{{ product.name }}</h3>
+                        <p class="product-copy">{{ product.short_description|truncatechars:95 }}</p>
+                        <div class="price">EGP {{ product.price }}</div>
+                    </div>
+                    <div class="meta"><span>{{ product.category_label|default:'Storefront pick' }}</span><span>Ready to order</span></div>
+                    <div class="actions">
+                        <a class="btn" href="{% url detail_route_name product.pk %}">View details</a>
+                        <form method="post" action="{% url 'add_to_cart' catalog_key product.pk %}" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{% url 'shoppingcart' %}">
+                            <button class="btn btn-primary" type="submit">Add to cart</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
